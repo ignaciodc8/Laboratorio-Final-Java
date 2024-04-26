@@ -2,8 +2,6 @@ package mx.com.gm.peliculas.datos;
 
 import java.io.*;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import mx.com.gm.peliculas.domain.Pelicula;
 import mx.com.gm.peliculas.excepciones.*;
 
@@ -11,25 +9,27 @@ public class AccesoDatosImpl implements IAccesoDatos {
 
     @Override
     public boolean existe(String nombre) throws AccesoDatosEx {
-        File archivo = new File(nombre);
-        return archivo.exists();
+        File archivo = new File(nombre); //Inicializamos el archivo.
+        return archivo.exists(); //Preguntamos si existe el archivo y retornamos.
     }
 
     @Override
     public List<Pelicula> listar(String nombre) throws LecturaDatosEx {
-        File archivo = new File(nombre);
-        var peliculas = new ArrayList<Pelicula>();
+        File archivo = new File(nombre); //Inicializamos el archivo.
+        List<Pelicula> peliculas = new ArrayList<>(); //
         try {
-            var entrada = new BufferedReader(new FileReader(archivo));
-            String linea = null;
-            linea = entrada.readLine();
+            var entrada = new BufferedReader(new FileReader(archivo)); //Variable para leer y listar las peliculas.
+            String linea = null; //Variable para leer cada linea
+            linea = entrada.readLine(); //Leemos cada linea
             while (linea != null) {
-                var pelicula = new Pelicula(linea);
+                Pelicula pelicula = new Pelicula(linea);
                 peliculas.add(pelicula);
-                entrada.readLine();
+                linea = entrada.readLine();
+                //Si no es null, sigue el ciclo while y sigue listando peliculas.
             }
-            entrada.close();
+            entrada.close(); //Sale del ciclo while y cerramos el flujo.
 
+                //Manejo excepciones:
         } catch (FileNotFoundException ex) {
             ex.printStackTrace(System.out);
             throw new LecturaDatosEx("Error al listar peliculas. " + ex.getMessage());
@@ -38,14 +38,14 @@ public class AccesoDatosImpl implements IAccesoDatos {
             ex.printStackTrace(System.out);
             throw new LecturaDatosEx("Error al listar peliculas. " + ex.getMessage());
         }
-        return peliculas;
+        return peliculas; //retornamos la lista prev creada.
     }
 
     @Override
     public void escribir(Pelicula pelicula, String nombre, boolean anexar) throws EscrituraDatosEx {
-        File archivo = new File(nombre);
+        File archivo = new File(nombre); //Inicializamos el archivo.
         try {
-            var salida = new PrintWriter(new FileWriter(archivo));
+            var salida = new PrintWriter(new FileWriter(archivo)); //Variable para escribir el archivo.
             salida.println(pelicula.toString());
             salida.close();
             System.out.println("Se ha escrito correctamente el archivo.");
@@ -86,7 +86,7 @@ public class AccesoDatosImpl implements IAccesoDatos {
     public void crear(String nombreArchivo) throws AccesoDatosEx {
         File archivo = new File(nombreArchivo);
         try {
-            var entrada = new PrintWriter(new FileWriter(nombreArchivo));
+            var entrada = new PrintWriter(new FileWriter(archivo));
             entrada.close();
             System.out.println("Se ha creado el archivo correctamente.");
         } catch (IOException ex) {
